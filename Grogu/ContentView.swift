@@ -6,44 +6,57 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct ContentView: View {
     @StateObject private var audioPlayer = AudioPlayer()
 
     // List of audio files
     private let audioFiles = [
-        ("yes", "mp3"),
-        ("no", "mp3"),
-        ("bad", "mp3")
+        "yes",
+        "no",
+        "bad"
     ]
     
     var body: some View {
-        VStack {
-            Text("Audio Player")
-                .font(.largeTitle)
+        ZStack {
+            // Background image
+            Image("grogu")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
             
             VStack {
-                ForEach(audioFiles, id: \.0) { file, type in
-                    Button(action: {
-                        playAudio(file: file, type: type)
-                    }) {
-                        Text("Play \(file)")
-                            .font(.title)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                Spacer()
+                
+                HStack {
+                    Spacer()
+                    
+                    ForEach(audioFiles, id: \.self) { file in
+                        AnimatedButton(file: file, action: {
+                            playAudio(file: file)
+                              
+                        })
+                        .opacity(0.5)
+                        
+                        
                     }
-                    .padding(.bottom, 10)
+                    
+                    Spacer()
                 }
+                .padding(.bottom, 20)
             }
-            .padding()
+        }
+        .onTapGesture {
+            playAudio(file: "main")
         }
     }
     
-    private func playAudio(file: String, type: String) {
+    private func playAudio(file: String) {
         audioPlayer.stop()
-        audioPlayer.setupAudioPlayer(withFile: file, type: type)
+        audioPlayer.setupAudioPlayer(withFile: file)
         audioPlayer.play()
     }
 }
+
+

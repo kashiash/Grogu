@@ -6,34 +6,38 @@
 //
 
 
+
 import SwiftUI
 import AVFoundation
 
 class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var audioPlayer: AVAudioPlayer!
     
-    func setupAudioPlayer(withFile file: String, type: String) {
-        if let path = Bundle.main.path(forResource: file, ofType: type) {
+    func setupAudioPlayer(withFile file: String) {
+        if let asset = NSDataAsset(name: file) {
             do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                audioPlayer = try AVAudioPlayer(data: asset.data, fileTypeHint: AVFileType.mp3.rawValue)
                 audioPlayer.delegate = self
                 audioPlayer.prepareToPlay()
             } catch {
                 print("Error: Could not initialize audio player")
             }
+        } else {
+            print("Error: Could not find the audio asset \(file)")
         }
     }
     
     func play() {
-        audioPlayer.play()
+        audioPlayer?.play()
     }
     
     func pause() {
-        audioPlayer.pause()
+        audioPlayer?.pause()
     }
     
     func stop() {
-        audioPlayer.stop()
-        audioPlayer.currentTime = 0
+        audioPlayer?.stop()
+        audioPlayer?.currentTime = 0
     }
 }
+
