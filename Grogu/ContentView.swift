@@ -10,13 +10,6 @@ import AVFoundation
 
 struct ContentView: View {
     @StateObject private var audioPlayer = AudioPlayer()
-
-    // List of audio files
-    private let audioFiles = [
-        "yes",
-        "no",
-        "bad"
-    ]
     
     var body: some View {
         ZStack {
@@ -26,29 +19,41 @@ struct ContentView: View {
                 .aspectRatio(contentMode: .fill)
                 .edgesIgnoringSafeArea(.all)
             
-            VStack {
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    ForEach(audioFiles, id: \.self) { file in
-                        AnimatedButton(file: file, action: {
-                            playAudio(file: file)
-                              
-                        })
-                        .opacity(0.5)
-                        
-                        
+            VStack(spacing: 0) {
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        playAudio(file: "main")
                     }
+                
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            playAudio(file: "yes")
+                        }
                     
-                    Spacer()
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            playAudio(file: "no")
+                        }
                 }
-                .padding(.bottom, 20)
+                
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        playAudio(file: "bad")
+                    }
             }
-        }
-        .onTapGesture {
-            playAudio(file: "main")
         }
     }
     
